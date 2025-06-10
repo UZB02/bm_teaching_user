@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-8">
+  <div class="min-h-screen">
     <div class="mx-auto">
       <h1 class="text-4xl font-bold text-center mb-2 text-white">Savol-Javob O'yini</h1>
       <p class="text-center text-blue-200 mb-8">Cardni bosing va savolni o'qing</p>
@@ -60,7 +60,7 @@
 
       <!-- Statistikalar -->
       <div class="mt-8 bg-white/10 backdrop-blur-sm rounded-xl p-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
           <div class="bg-white/20 rounded-lg p-4">
             <div class="text-2xl font-bold text-white">{{ answeredQuestions.length }}</div>
             <div class="text-blue-200 text-sm">Javob berilgan</div>
@@ -73,7 +73,7 @@
             <div class="text-2xl font-bold text-yellow-300">{{ resultPercent }}%</div>
             <div class="text-blue-200 text-sm">Natija</div>
           </div>
-        </div>
+        </div> -->
 
         <div class="mt-4 flex justify-center space-x-4">
           <Button 
@@ -141,6 +141,7 @@ const toggleCard = (cardId) => {
   if (!flippedCards.value.includes(cardId)) {
     flippedCards.value.push(cardId)
   }
+  console.log(cardId);
 }
 
 const selectAnswer = (cardId, answer) => {

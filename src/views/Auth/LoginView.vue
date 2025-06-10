@@ -5,13 +5,7 @@
       <form @submit.prevent="login()" class="space-y-5">
         <div>
           <label class="block text-sm text-gray-600 mb-1">Email</label>
-          <InputText
-            v-model="email"
-            type="email"
-            class="w-full"
-            placeholder="Email kiriting"
-            required
-          />
+          <InputText v-model="email" type="email" class="w-full" placeholder="Email kiriting" />
         </div>
         <div>
           <label class="block text-sm text-gray-600 mb-1">Parol</label>
@@ -22,18 +16,13 @@
             :feedback="false"
             toggleMask
             placeholder="Parol kiriting"
-            required
           />
         </div>
-        <Button label="Kirish" type="submit" class="w-full" />
+        <Button :label="isLoading ? 'Loading...' : 'Kirish'" type="submit" class="w-full" />
       </form>
-      <span
-        @click="router.push('/register')"
-        class="flex items-center justify-end cursor-pointer text-emerald-500 transition duration-100 hover:scale-[1.01]"
-        >Ro'yxatdan o'tish</span
-      >
     </div>
   </div>
+  <Toast />
 </template>
 
 <script setup>
@@ -41,6 +30,10 @@ import { ref } from 'vue'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
+
+const toast = useToast()
 
 import axios from 'axios'
 import { useRouter } from 'vue-router'
@@ -48,26 +41,47 @@ import { useRouter } from 'vue-router'
 const email = ref('')
 const password = ref('')
 const router = useRouter()
+const isLoading = ref(false)
 
 const login = async () => {
-  try {
-    const res = await axios.post('/admin/login', {
-      email: email.value,
-      password: password.value,
+  isLoading.value = true
+  if (email.value === '' || password.value === '') {
+    isLoading.value = false
+    toast.add({
+      severity: 'error',
+      summary: 'Xatolik',
+      detail: "Maydonlarni to'ldiring",
+      life: 3000,
     })
-    if (res.status == 200) {
-      router.push('/')
-      setTimeout(() => {
-        window.location.reload()
-      }, 1500)
-    }
-    // optional: sessionStorage yoki auth store saqlash
-    sessionStorage.setItem('authToken', res.data.token)
-    sessionStorage.setItem('admin', JSON.stringify(res.data.admin))
+  } else {
+    try {
+      const res = await axios.post('/admin/login', {
+        email: email.value,
+        password: password.value,
+      })
+      if (res.status == 200) {
+        isLoading.value = false
+        router.push('/')
+        email.value = ''
+        password.value = ''
+        setTimeout(() => {
+          window.location.reload()
+        }, 1500)
+      }
+      sessionStorage.setItem('authToken', res.data.token)
+      sessionStorage.setItem('admin', JSON.stringify(res.data.admin))
 
-    router.push('/')
-  } catch (err) {
-    console.error('Login xatoligi:', err.response?.data?.message || err.message)
+      router.push('/')
+    } catch (err) {
+      isLoading.value = false
+      toast.add({
+        severity: 'error',
+        summary: 'Xatolik',
+        detail: err.response?.data?.message,
+        life: 3000,
+      })
+      console.error('Login xatoligi:', err.response?.data?.message || err.message)
+    }
   }
 }
 </script>

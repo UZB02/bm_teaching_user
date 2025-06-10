@@ -1,23 +1,37 @@
 <template>
-  <div class="p-6 max-w-xl mx-auto">
-    <div>Imtihonni Boshlash</div>
-    <div class="">
+  <div class="p-4 md:p-6">
+    <div class="text-xl md:text-2xl font-bold mb-6 text-center text-white">Imtihonni Boshlash</div>
+    <div class="max-w-3xl mx-auto">
       <form
         @submit.prevent="handleSubmit"
-        class="space-y-6 grid grid-cols-2 items-center justify-center"
+        class="space-y-6 md:space-y-8 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6"
       >
-        <div v-for="level in levels" :key="level.value" class="space-y-2">
+        <div 
+          v-for="level in levels" 
+          :key="level.value" 
+          class="space-y-2 p-3 bg-white/10 backdrop-blur-sm rounded-lg"
+        >
           <div class="flex items-center gap-4">
-            <Checkbox v-model="selectedLevels" :inputId="level.value" :value="level.value" />
-            <label :for="level.value" class="min-w-[100px] font-medium">{{ level.label }}</label>
+            <Checkbox 
+              v-model="selectedLevels" 
+              :inputId="level.value" 
+              :value="level.value" 
+              class="h-5 w-5"
+            />
+            <label 
+              :for="level.value" 
+              class="min-w-[100px] font-medium text-sm sm:text-base text-white"
+            >
+              {{ level.label }}
+            </label>
           </div>
 
-          <div v-if="selectedLevels.includes(level.value)" class="ml-8">
-            <label for="count" class="block text-sm text-gray-600 mb-1">Testlar soni</label>
+          <div class="ml-8 mt-3">
+            <label for="count" class="block text-sm text-white mb-1">Testlar soni</label>
             <InputNumber
               v-model="questionCounts[level.value]"
               inputId="count"
-              inputClass="w-full"
+              inputClass="w-full text-sm sm:text-base"
               :min="1"
               :max="50"
               showButtons
@@ -33,7 +47,7 @@
           label="Testni Boshlash"
           icon="pi pi-play"
           type="submit"
-          class="w-full mt-6"
+          class="w-full mt-6 col-span-1 sm:col-span-2"
           :disabled="selectedLevels.length === 0"
         />
       </form>
@@ -47,7 +61,7 @@ import Checkbox from 'primevue/checkbox'
 import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button'
 
-const emit = defineEmits(['submit-request']) // 1. Hodisani e'lon qilish
+const emit = defineEmits(['submit-request'])
 
 const levels = [
   { label: 'Oson', value: 'Oson' },
@@ -58,10 +72,10 @@ const levels = [
 
 const selectedLevels = ref([])
 const questionCounts = reactive({
-  Oson: 5,
-  "O'rta": 5,
-  Qiyin: 5,
-  'Juda qiyin': 5,
+  Oson: 0,
+  "O'rta": 0,
+  Qiyin: 0,
+  'Juda qiyin': 0,
 })
 
 const handleSubmit = () => {
@@ -70,10 +84,20 @@ const handleSubmit = () => {
     request[level] = questionCounts[level] || 0
   })
 
-  emit('submit-request', request) // 2. Parentga yuborish
+  emit('submit-request', request)
 }
 </script>
 
 <style scoped>
-/* Kerak bo'lsa qo'shimcha stil qo'shing */
+/* Mobile-first responsive adjustments */
+@media (max-width: 639px) {
+  .p-inputnumber {
+    width: 100%;
+  }
+  
+  .p-inputnumber-input {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+}
 </style>
