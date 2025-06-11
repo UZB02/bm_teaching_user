@@ -39,6 +39,7 @@
               incrementButtonIcon="pi pi-plus"
               decrementButtonIcon="pi pi-minus"
               placeholder="Son"
+              :disabled="!selectedLevels.includes(level.value)" 
             />
           </div>
         </div>

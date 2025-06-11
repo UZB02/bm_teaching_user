@@ -1,17 +1,17 @@
 <template>
   <section class="mx-auto bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-8">
     <div class="container">
-      <div :class="refresh ? 'hidden' : ''">
-        <RandomQuizForm @submit-request="handleRequestFromChild" />
+      <div>
+        <RandomQuizForm v-if="!refresh" :key="formKey" @submit-request="handleRequestFromChild" />
       </div>
       <div>
-        <Button 
-        v-if="refresh"
-            label="Qayta boshlash" 
-            icon="pi pi-refresh" 
-            severity="warning"
-            @click="refreshQuizas()"
-          />
+        <Button
+          v-if="refresh"
+          label="Qayta boshlash"
+          icon="pi pi-refresh"
+          severity="warning"
+          @click="refreshQuizas()"
+        />
         <RandomQuizCards :randomQuizs="randomQuizs" />
       </div>
     </div>
@@ -27,7 +27,7 @@ import Button from 'primevue/button'
 
 const randomChanges = ref({})
 const randomQuizs = ref([])
-const refresh=ref(false)
+const refresh = ref(false)
 
 function handleRequestFromChild(data) {
   console.log('Childdan olingan request:', data)
@@ -40,9 +40,9 @@ const fetchRandomQuestions = async () => {
     const res = await axios.get('/questions/random', {
       params: randomChanges.value,
     })
-    if(res.status==200){
+    if (res.status == 200) {
       randomQuizs.value = res.data
-      refresh.value=true
+      refresh.value = true
     }
     console.log('Random savollar:', randomQuizs.value)
   } catch (err) {
@@ -50,9 +50,13 @@ const fetchRandomQuestions = async () => {
   }
 }
 
-const refreshQuizas=()=>{
-  refresh.value=false
-  randomQuizs.value=null
+const formKey = ref(0)
+
+const refreshQuizas = () => {
+  refresh.value = false
+  randomQuizs.value = []
+  randomChanges.value = {}
+  formKey.value++ // bu orqali <RandomQuizForm> butunlay qaytadan yaratiladi
 }
-console.log(randomQuizs.value);
+console.log(randomQuizs.value)
 </script>

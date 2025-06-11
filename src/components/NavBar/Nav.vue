@@ -3,7 +3,7 @@
     <div class="container">
         <Menubar>
             <template #start>
-                <img src="../../imgs/logo.jpg" class="w-[40px]" alt="">
+                <img @click="router.push('/')" src="../../imgs/logo.jpg" class="w-[40px]" alt="">
             </template>
             <template #item="{ item, props, hasSubmenu, root }">
                 <a class="flex items-center" v-bind="props.action">

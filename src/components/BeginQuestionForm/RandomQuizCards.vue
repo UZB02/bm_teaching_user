@@ -9,7 +9,7 @@
           v-for="(card, index) in cards" 
           :key="card._id"
           class="relative h-48 cursor-pointer perspective-1000"
-          @click="toggleCard(card._id)"
+          @click="toggleCard(card)"
         >
           <div 
             class="relative w-full h-full transition-transform duration-700 transform-style-preserve-3d"
@@ -28,8 +28,8 @@
             <!-- Orqa tomoni -->
             <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180">
               <div class="h-full bg-white rounded-xl shadow-lg border-4 border-blue-500 p-4 flex flex-col">
-                <div class="bg-blue-500 text-white p-2 rounded-lg text-center mb-3">
-                  <i class="pi pi-question-circle text-lg mr-2"></i>
+                <div @click="visibleAnsver=true" class="bg-blue-500 text-white p-2 rounded-lg text-center mb-3">
+                  <i class="pi pi-eye text-lg mr-2"></i>
                   <span class="font-semibold">Savol {{ index + 1 }}</span>
                 </div>
 
@@ -92,11 +92,47 @@
       </div>
     </div>
   </div>
+<!-- Begin See Ansver modal -->
+<Dialog
+  v-model:visible="visibleAnsver"
+  modal
+  header="🧠 Savol Javobi"
+  :style="{ width: '40rem' }"
+  :breakpoints="{ '1199px': '80vw', '575px': '95vw' }"
+  :pt="{
+    root: { class: 'border-0 rounded-xl overflow-hidden shadow-2xl' },
+    header: { class: 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-5 text-xl font-semibold flex items-center gap-3' },
+    content: { class: 'p-0' },
+    mask: { class: 'backdrop-blur-sm' }
+  }"
+>
+  <div class="p-6 bg-white">
+    <div class="flex items-start gap-4 mb-6">
+      <i class="pi pi-check-circle text-green-600 text-2xl mt-1"></i>
+      <p class="text-gray-800 text-base md:text-lg leading-relaxed">
+        {{ changeQuiz.answer }}
+      </p>
+    </div>
+
+    <div class="flex justify-end">
+      <Button 
+        label="Yopish" 
+        icon="pi pi-times-circle" 
+        @click="visibleAnsver = false"
+        class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-md transition-all duration-200"
+      />
+    </div>
+  </div>
+</Dialog>
+
+<!-- End See Ansver modal -->
 </template>
 
 <script setup>
 import { ref, computed, defineProps, watch } from 'vue'
 import Button from 'primevue/button'
+import Dialog from 'primevue/dialog';
+
 
 const props = defineProps({
   randomQuizs: {
@@ -108,6 +144,8 @@ const props = defineProps({
 const flippedCards = ref([])
 const answeredQuestions = ref([])
 const userAnswers = ref({})
+const changeQuiz=ref({})
+const visibleAnsver=ref(false)
 
 const shuffleArray = (array) => {
   return array
@@ -137,11 +175,11 @@ const resultPercent = computed(() => {
   return total > 0 ? Math.round((correctAnswers.value / total) * 100) : 0
 })
 
-const toggleCard = (cardId) => {
-  if (!flippedCards.value.includes(cardId)) {
-    flippedCards.value.push(cardId)
+const toggleCard = (item) => {
+  if (!flippedCards.value.includes(item._id)) {
+    flippedCards.value.push(item._id)
   }
-  console.log(cardId);
+  changeQuiz.value=item
 }
 
 const selectAnswer = (cardId, answer) => {
