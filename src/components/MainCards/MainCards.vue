@@ -77,6 +77,33 @@
             </div>
           </template>
         </Card>
+        <!-- options quizs Card -->
+        <Card
+          class="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 shadow-lg"
+        >
+          <template #header>
+            <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 text-white rounded-t-lg">
+              <i class="pi pi-play text-3xl mb-3 block"></i>
+              <h3 class="text-xl font-semibold">Boshlash</h3>
+            </div>
+          </template>
+          <template #content>
+            <div class="p-6">
+              <p class="text-gray-600 mb-4">Savollarni daraja bo'yicha taqsimlang.</p>
+              <div class="flex items-center text-sm text-gray-500 mb-4">
+                <i class="pi pi-clock mr-2"></i>
+                <span>Variantli testlar</span>
+              </div>
+              <Button
+                label="Boshlash"
+                @click="router.push('/playoptionquiz')"
+                class="w-full bg-green-500 hover:bg-green-600 border-green-500 hover:border-green-600"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+              />
+            </div>
+          </template>
+        </Card>
       </div>
     </div>
   </div>

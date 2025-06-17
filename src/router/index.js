@@ -31,6 +31,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/playoptionquiz',
+      name: 'Play Option Quiz',
+      component: () => import('../views/OptionQuizs/PlayOptionQuizsView.vue'),
+      meta: {
+        layout: AppLayout,
+      },
+    },
+    {
       path: '/login',
       name: 'Login',
       component: () => import('../views/Auth/LoginView.vue'),
